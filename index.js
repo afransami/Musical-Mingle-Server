@@ -32,7 +32,8 @@ async function run() {
     await client.connect();
 
     const usersCollection = client.db("musicalMingle").collection("users");
-    const formsCollection = client.db("musicalMingle").collection("forms");
+    const formsCollection = client.db("musicalMingle").collection("class");
+    const instructorsCollection = client.db("musicalMingle").collection("instructors");
     // const menuCollection = client.db("bistro-boss").collection("menu");
     // const reviewCollection = client.db("bistro-boss").collection("reviews");
     // const cartCollection = client.db("bistro-boss").collection("carts");
@@ -51,33 +52,30 @@ async function run() {
         res.send(result)
       })
 
-    // upload form 
-      app.post('/uploadForm', async (req, res) => {
+    // upload class 
+      app.post('/class', async (req, res) => {
         const form = req.body
         console.log(form)
         const result = await formsCollection.insertOne(form)
         res.send(result)
       })
-  
-
-    //   app.get('/users/:email', async (req, res) => {
-    //     const email = req.params.email
-    //     const query = { 'admin.email': email }
-    //     const result = await usersCollection.find(query).toArray()
-  
-    //     console.log(result)
-    //     res.send(result)
-    //   })
-
-    // jwt api related functions
-  
-    //   app.post('/jwt', (req, res) => {
-    //     const user = req.body;
-    //     const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn:'1h'})
-    //     res.send({token});
-    //   });
 
 
+       // upload instructors 
+       app.post('/instructor', async (req, res) => {
+        const form = req.body
+        console.log(form)
+        const result = await instructorsCollection.insertOne(form)
+        res.send(result)
+      })
+
+
+
+    //   get all classes
+    app.get('/class', async (req, res) => {
+        const result = await formsCollection.find().toArray()
+        res.send(result)
+      })
 
     // users related apis
 
@@ -122,6 +120,14 @@ async function run() {
       res.send(result)  
     })
 
+
+    // popular class api 
+
+    app.get ('/class', async(req, res)=>{
+        const result = await formsCollection.find().toArray()
+        res.send(result)
+        console.log(result);
+    })
     
     // admin related apis
     // app.patch('/users/admin/:id', async (req, res) => {
