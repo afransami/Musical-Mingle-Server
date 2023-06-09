@@ -33,7 +33,7 @@ async function run() {
 
     const usersCollection = client.db("musicalMingle").collection("users");
     const formsCollection = client.db("musicalMingle").collection("class");
-    const instructorsCollection = client.db("musicalMingle").collection("instructors");
+    // const instructorsCollection = client.db("musicalMingle").collection("instructors");
     // const menuCollection = client.db("bistro-boss").collection("menu");
     // const reviewCollection = client.db("bistro-boss").collection("reviews");
     // const cartCollection = client.db("bistro-boss").collection("carts");
@@ -70,14 +70,14 @@ async function run() {
       })
 
 
-
-    //   get all classes
-    app.get('/class', async (req, res) => {
+      //   get all classes and instructors
+    app.get('/class', async (req, res) => {        
         const result = await formsCollection.find().toArray()
         res.send(result)
       })
 
-    // users related apis
+      
+      // users related apis
 
     app.get('/users',async(req,res) => {
         const results = await usersCollection.find().toArray()
