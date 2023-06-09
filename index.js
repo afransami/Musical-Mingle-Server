@@ -58,8 +58,16 @@ async function run() {
         const result = await formsCollection.insertOne(form)
         res.send(result)
       })
+  
 
-
+    //   app.get('/users/:email', async (req, res) => {
+    //     const email = req.params.email
+    //     const query = { 'admin.email': email }
+    //     const result = await usersCollection.find(query).toArray()
+  
+    //     console.log(result)
+    //     res.send(result)
+    //   })
 
     // jwt api related functions
   
@@ -78,19 +86,41 @@ async function run() {
       res.send(results)
     })
 
+    app.get('/admin', async(req, res)=> {
+        const email = req.query.email;
+        const query = {$and: [{email: email}, {role: 'Admin'}]};
+        const result = await usersCollection.findOne(query);
+        res.send(result);
+    });
 
-    // app.post('/users', async (req, res) => {
-    //   const user = req.body;
-    //   const query = {email: user.email}
-    //   const existingUser = await usersCollection.findOne(query);
+    app.get('/instructor', async(req, res)=> {
+        const email = req.query.email;
+        const query = {$and: [{email: email}, {role: 'Instructor'}]};
+        const result = await usersCollection.findOne(query);
+        res.send(result);
+        console.log(result);
+    });
+    app.get('/student', async(req, res)=> {
+        const email = req.query.email;
+        const query = {$and: [{email: email}, {role: 'Student'}]};
+        const result = await usersCollection.findOne(query);
+        res.send(result);
+        console.log(result);
+    });
+
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const query = {email: user.email}
+      const existingUser = await usersCollection.findOne(query);
       
-    //   if (existingUser){
-    //     return res.send({message: 'User already exists'})
-    //   }
+      if (existingUser){
+        return res.send({message: 'User already exists'})
+      }
       
-    //   const result = await usersCollection.insertOne(user);
-    //   res.send(result)  
-    // })
+      const result = await usersCollection.insertOne(user);
+      res.send(result)  
+    })
 
     
     // admin related apis
