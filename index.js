@@ -33,6 +33,7 @@ async function run() {
 
     const usersCollection = client.db("musicalMingle").collection("users");
     const formsCollection = client.db("musicalMingle").collection("class");
+    const classCollection = client.db("musicalMingle").collection("selectedClass");
     // const instructorsCollection = client.db("musicalMingle").collection("instructors");
     // const menuCollection = client.db("bistro-boss").collection("menu");
     // const reviewCollection = client.db("bistro-boss").collection("reviews");
@@ -55,9 +56,9 @@ async function run() {
     // upload class 
       app.post('/class', async (req, res) => {
         const form = req.body
-        console.log(form)
         const result = await formsCollection.insertOne(form)
         res.send(result)
+        console.log(result)
       })
 
 
@@ -71,11 +72,18 @@ async function run() {
 
 
       //   get all classes and instructors
-    app.get('/class', async (req, res) => {        
+    // app.get('/class', async (req, res) => {        
+    //     const result = await formsCollection.find().toArray()
+    //     res.send(result)
+    //   })
+
+       // popular class api 
+
+    app.get ('/class', async(req, res)=>{
         const result = await formsCollection.find().toArray()
         res.send(result)
-      })
-
+        // console.log(result);
+    })
       
       // users related apis
 
@@ -83,6 +91,20 @@ async function run() {
         const results = await usersCollection.find().toArray()
       res.send(results)
     })
+
+    // to save class on db
+    // app.post('/class',async(req,res) => {
+    //     const item = req.body;
+    //     const results = await classCollection.insertOne(item)
+    //   res.send(results)
+    // })
+
+    app.post('/selectedClass', async (req, res) => {
+        const item = req.body;
+        // console.log(item);
+        const result = await classCollection.insertOne(item);
+        res.send(result);
+      })
 
     app.get('/admin', async(req, res)=> {
         const email = req.query.email;
@@ -96,38 +118,34 @@ async function run() {
         const query = {$and: [{email: email}, {role: 'Instructor'}]};
         const result = await usersCollection.findOne(query);
         res.send(result);
-        console.log(result);
+        // console.log(result);
     });
+
+
     app.get('/student', async(req, res)=> {
         const email = req.query.email;
         const query = {$and: [{email: email}, {role: 'Student'}]};
         const result = await usersCollection.findOne(query);
         res.send(result);
-        console.log(result);
+        // console.log(result);
     });
 
 
-    app.post('/users', async (req, res) => {
-      const user = req.body;
-      const query = {email: user.email}
-      const existingUser = await usersCollection.findOne(query);
+    // app.post('/users', async (req, res) => {
+    //   const user = req.body;
+    //   const query = {email: user.email}
+    //   const existingUser = await usersCollection.findOne(query);
       
-      if (existingUser){
-        return res.send({message: 'User already exists'})
-      }
+    //   if (existingUser){
+    //     return res.send({message: 'User already exists'})
+    //   }
       
-      const result = await usersCollection.insertOne(user);
-      res.send(result)  
-    })
+    //   const result = await usersCollection.insertOne(user);
+    //   res.send(result)  
+    // })
 
 
-    // popular class api 
-
-    app.get ('/class', async(req, res)=>{
-        const result = await formsCollection.find().toArray()
-        res.send(result)
-        console.log(result);
-    })
+   
     
  // class collection apis
  app.get('/class', async (req, res) => {
