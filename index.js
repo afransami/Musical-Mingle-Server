@@ -129,6 +129,28 @@ async function run() {
         console.log(result);
     })
     
+ // class collection apis
+ app.get('/class', async (req, res) => {
+    const email = req.query.email;
+
+    if (!email) {
+      res.send([]);
+    }
+    const query = { email: email };
+    const result = await formsCollection.find(query).toArray();
+    res.send(result);
+  });
+
+
+
+    // Delete class
+
+    app.delete('/class/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)};
+        const result = await formsCollection.deleteOne(query)
+        res.send(result)
+      })
     // admin related apis
     // app.patch('/users/admin/:id', async (req, res) => {
     //   const id= req.params.id
