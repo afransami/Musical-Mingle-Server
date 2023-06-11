@@ -277,3 +277,8 @@ app.get ('/', (req, res)=>{
 app.listen(port, ()=>{
     console.log(`musical mingle is on port ${port}`);
 })
+
+
+
+// DB_USER=music-user
+// DB_PASS=JmVOKmlrVpZWtAY9
