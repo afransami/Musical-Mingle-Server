@@ -33,7 +33,7 @@ async function run() {
 
     const usersCollection = client.db("musicalMingle").collection("users");
     const formsCollection = client.db("musicalMingle").collection("class");
-    const classCollection = client.db("musicalMingle").collection("selectedClass");
+    const classCollection = client.db("musicalMingle").collection("selectedClasses");
     // const instructorsCollection = client.db("musicalMingle").collection("instructors");
     // const menuCollection = client.db("bistro-boss").collection("menu");
     // const reviewCollection = client.db("bistro-boss").collection("reviews");
@@ -110,10 +110,10 @@ async function run() {
         const result = await usersCollection.updateOne(filter, updateDoc);
         res.send(result);
       })
-      
 
 
-    app.post('/selectedClass', async (req, res) => {
+
+    app.post ('/selectedClasses', async (req, res) => {
         const item = req.body;
         const result = await classCollection.insertOne(item);
         res.send(result);
