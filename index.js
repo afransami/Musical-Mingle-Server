@@ -99,11 +99,25 @@ async function run() {
     //   res.send(results)
     // })
 
+    app.patch('/users/admin/:id', async (req, res) => {
+        const id= req.params.id
+        const filter = {_id: new ObjectId(id)}
+        const updateDoc = {
+          $set: {
+            role: "admin"
+        },
+      };
+        const result = await usersCollection.updateOne(filter, updateDoc);
+        res.send(result);
+      })
+      
+
+
     app.post('/selectedClass', async (req, res) => {
         const item = req.body;
-        // console.log(item);
         const result = await classCollection.insertOne(item);
         res.send(result);
+        console.log(result);
       })
 
     app.get('/admin', async(req, res)=> {
