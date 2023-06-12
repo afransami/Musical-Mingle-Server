@@ -100,14 +100,14 @@ async function run() {
 
     app.get('/admin', async(req, res)=> {
         const email = req.query.email;
-        const query = {$and: [{email: email}, {role: 'Admin'}]};
+        const query = {$and: [{email: email}, {role: 'admin'}]};
         const result = await usersCollection.findOne(query);
         res.send(result);
     });
 
     app.get('/instructor', async(req, res)=> {
         const email = req.query.email;
-        const query = {$and: [{email: email}, {role: 'Instructor'}]};
+        const query = {$and: [{email: email}, {role: 'instructor'}]};
         const result = await usersCollection.findOne(query);
         res.send(result);
     });
@@ -115,7 +115,7 @@ async function run() {
 
     app.get('/student', async(req, res)=> {
         const email = req.query.email;
-        const query = {$and: [{email: email}, {role: 'Student'}]};
+        const query = {$and: [{email: email}, {role: 'student'}]};
         const result = await usersCollection.findOne(query);
         res.send(result);
         // console.log(result);
