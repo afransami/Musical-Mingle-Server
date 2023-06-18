@@ -1,8 +1,11 @@
-const express = require('express')
-const cors = require('cors');
-const app = express();
-const port = process.env.PORT || 5000;
 require('dotenv').config()
+const express = require('express')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const port = process.env.PORT || 5000;
+
+const app = express();
+const cors = require('cors');
+
 
 const corsOptions = {
     origin: '*',
@@ -13,7 +16,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tcuzcs8.mongodb.net/?retryWrites=true&w=majority`;
 
 
@@ -27,13 +30,12 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+   
+    const usersCollection = client.db("musical-mingle").collection("users");
+    const formsCollection = client.db("musical-mingle").collection("addClass");
+    const classCollection = client.db("musical-mingle").collection("selectedClasses");
 
-    const usersCollection = client.db("musicalMingle").collection("users");
-    const formsCollection = client.db("musicalMingle").collection("class");
-    const classCollection = client.db("musicalMingle").collection("selectedClasses");
-
-
+ // update/modified/register/signUp users
     app.put('/users/:email', async (req, res) => {
         const email = req.params.email
         const user = req.body
@@ -47,6 +49,16 @@ async function run() {
         res.send(result)
       })
 
+
+       // register/signUp users
+      app.post('/users', async (req, res) => {
+        const saveUser = req.body
+        const result = await usersCollection.insertOne(saveUser)
+        res.send(result)
+        console.log(result)
+      })
+
+
     // upload class 
       app.post('/class', async (req, res) => {
         const form = req.body
@@ -54,13 +66,12 @@ async function run() {
         res.send(result)
         console.log(result)
       })
-
-
+      
        // upload instructors 
        app.post('/instructor', async (req, res) => {
         const form = req.body
         console.log(form)
-        const result = await instructorsCollection.insertOne(form)
+        const result = await usersCollection.insertOne(form)
         res.send(result)
       })
 
@@ -75,8 +86,9 @@ async function run() {
       // users related apis
 
     app.get('/users',async(req,res) => {
-        const results = await usersCollection.find().toArray()
-      res.send(results)
+        const results = await usersCollection.find().toArray()      
+        res.send(results)
+        console.log(results);
     })
 
     app.patch('/users/admin/:id', async (req, res) => {
@@ -90,6 +102,19 @@ async function run() {
         const result = await usersCollection.updateOne(filter, updateDoc);
         res.send(result);
       })
+
+      app.patch('/users/instructor/:id', async (req, res) => {
+        const id= req.params.id
+        const filter = {_id: new ObjectId(id)}
+        const updateDoc = {
+          $set: {
+            role: "instructor"
+        },
+      };
+        const result = await usersCollection.updateOne(filter, updateDoc);
+        res.send(result);
+      })
+
 
     app.post ('/selectedClasses', async (req, res) => {
         const item = req.body;
@@ -168,9 +193,9 @@ run().catch(console.dir);
 
 
 app.get ('/', (req, res)=>{
-    res.send ('Musical Mingle is on')
+    res.send ('Musical Mingle Assignment-12 is on')
 })
 
 app.listen(port, ()=>{
-    console.log(`musical mingle is on port ${port}`);
+    console.log(`musical mingle Assignment-12 is on port ${port}`);
 })
